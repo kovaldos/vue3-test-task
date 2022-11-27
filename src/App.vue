@@ -7,42 +7,29 @@
         <div class="container catalog__container">
           <div class="catalog__heading">
             <h1 class="title title--h2 catalog__title">Каталог</h1>
-            <!-- <div class="catalog__quantity catalog__quantity--mobile">
-              <span class="catalog__quantity-num">28 </span
-              ><span class="catalog__quantity-text">единиц техники</span>
-            </div> -->
           </div>
           <div class="catalog__wrapper">
             <div class="catalog__wrapper-cols">
               <div class="catalog__wrapper-col catalog__wrapper-col--01">
                 <div class="catalog__filter catalog__filter--rent">
-                  <!-- <div class="catalog__filter-head">
-                    <h2 class="title title--h6 catalog__filter-title">
-                      Фильтры
-                    </h2>
-                    <button
-                      class="btn btn--reset catalog__filter-cancel"
-                      type="button"
-                    >
-                      Отмена
-                    </button>
-                  </div> -->
                   <div class="catalog__filter">
                     <ul class="catalog__filter-list">
                       <li
                         class="catalog__filter-list-item"
-                        v-for="(brand, index) in brandsList"
-                        :key="index"
+                        v-for="brand in brandsList"
+                        :key="brand.id"
                       >
                         <div class="custom-toggle">
                           <label>
                             <input
                               type="checkbox"
-                              id="ekskavatory"
-                              name="ekskavatory"
+                              :id="brand.id"
+                              :name="brand.name"
+                              :value="brand.name"
+                              v-model="checkedNames"
                             /><span class="custom-toggle__icon"></span
                             ><span class="custom-toggle__label"
-                              >{{ brand }}
+                              >{{ brand.name }}
                             </span>
                           </label>
                         </div>
@@ -54,44 +41,85 @@
               <div class="catalog__wrapper-col catalog__wrapper-col--02">
                 <div class="catalog__items catalog__items--rent">
                   <div class="catalog__cards catalog__cards--grid">
-                    <div
-                      class="catalog__card"
-                      v-for="card in cards"
-                      :key="card.id"
-                    >
-                      <div class="catalog__card-col catalog__card-col--01">
-                        <h2 class="title catalog__card-title">
-                          {{ card.title }}
-                        </h2>
-                        <div class="catalog__card-pic">
-                          <img
-                            src="https://via.placeholder.com/260x160"
-                            alt="rent technic image"
-                          />
+                    <transition-group name="cards-list">
+                      <div
+                        class="catalog__card"
+                        v-for="card in filterData"
+                        :key="card.id"
+                      >
+                        <div class="catalog__card-col catalog__card-col--01">
+                          <h2 class="title catalog__card-title">
+                            {{ card.title }}
+                          </h2>
+                          <div class="catalog__card-pic">
+                            <img
+                              src="https://via.placeholder.com/260x160"
+                              alt="rent technic image"
+                            />
+                          </div>
+                        </div>
+                        <div class="catalog__card-col catalog__card-col--02">
+                          <h3
+                            class="title catalog__card-model"
+                            :data-brand="card.brand"
+                          >
+                            {{ card.name }}
+                          </h3>
+                        </div>
+                        <div class="catalog__card-col catalog__card-col--03">
+                          <div class="catalog__card-price">
+                            <span class="catalog__card-price-num">
+                              {{ card.num }}
+                            </span>
+                            <span class="catalog__card-price-currency">
+                              {{ card.currency }}
+                            </span>
+                            <span class="catalog__card-price-time">
+                              {{ card.time }}
+                            </span>
+                          </div>
+                        </div>
+                        <div class="catalog__card-colors" v-if="card.colors">
+                          <ul class="catalog__card-list">
+                            <li
+                              class="catalog__card-list-item"
+                              v-for="color in card.colors"
+                              :key="color"
+                            >
+                              <!-- <div class="custom-toggle custom-toggle--radio">
+                                <label>
+                                  <input
+                                    type="radio"
+                                    name="color"
+                                    :value="color.value"
+                                    v-model="checkedColor"
+                                  /><span class="custom-toggle__icon"></span
+                                  ><span
+                                    class="custom-toggle__label color"
+                                  ></span>
+                                </label>
+                              </div> -->
+                              <span
+                                class="color"
+                                :class="'color--' + color.value"
+                                :style="'background-color:' + color.value"
+                              ></span>
+                            </li>
+                          </ul>
+                          <!-- <ul class="catalog__card-list sizes-list">
+                            <li
+                              class="catalog__card-list-item sizes-list__item"
+                              v-for="size in checkedColor"
+                              :key="size.id"
+                            >
+                              <span class="size" v-if="size.flag !== false">{{
+                                size.value
+                              }}</span>
+                            </li>
+                          </ul> -->
                         </div>
                       </div>
-                      <div class="catalog__card-col catalog__card-col--02">
-                        <h3
-                          class="title catalog__card-model"
-                          :data-brand="card.brand"
-                        >
-                          {{ card.name }}
-                        </h3>
-                      </div>
-                      <div class="catalog__card-col catalog__card-col--03">
-                        <div class="catalog__card-price">
-                          <span class="catalog__card-price-num">
-                            {{ card.num }}
-                          </span>
-                          <span class="catalog__card-price-currency">
-                            {{ card.currency }}
-                          </span>
-                          <span class="catalog__card-price-time">
-                            {{ card.time }}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
+                    </transition-group>
                   </div>
                 </div>
               </div>
@@ -113,8 +141,34 @@ import { initTabs } from "./js/init-tabs";
 export default {
   data() {
     return {
-      title: "Каталог",
-      brandsList: ["Volvo", "JCB", "Kocurek", "Hyundai", "Hitachi"],
+      checkedNames: [],
+      checkedColor: null,
+      brandsList: [
+        {
+          id: "id-brand-1",
+          name: "Volvo",
+        },
+        {
+          id: "id-brand-2",
+          name: "JCB",
+        },
+        {
+          id: "id-brand-3",
+          name: "Kocurek",
+        },
+        {
+          id: "id-brand-4",
+          name: "Hyundai",
+        },
+        {
+          id: "id-brand-5",
+          name: "Hitachi",
+        },
+        {
+          id: "id-brand-6",
+          name: "McCloskey",
+        },
+      ],
       cards: [
         {
           id: "id-card-1",
@@ -133,6 +187,62 @@ export default {
           num: "30 000",
           currency: " ₽ ",
           time: "/ смена",
+          colors: [
+            {
+              id: "id-color-1",
+              value: "yellow",
+              sizes: [
+                {
+                  value: "x",
+                  flag: true,
+                },
+                {
+                  value: "xl",
+                  flag: true,
+                },
+                {
+                  value: "xxl",
+                  flag: true,
+                },
+              ],
+            },
+            {
+              id: "id-color-2",
+              value: "red",
+              sizes: [
+                {
+                  value: "x",
+                  flag: false,
+                },
+                {
+                  value: "xl",
+                  flag: true,
+                },
+                {
+                  value: "xxl",
+                  flag: false,
+                },
+              ],
+            },
+            {
+              id: "id-color-3",
+              value: "orange",
+              sizes: [
+                {
+                  value: "x",
+                  flag: false,
+                },
+                {
+                  value: "xl",
+                  flag: false,
+                },
+                {
+                  value: "xxl",
+                  flag: false,
+                },
+              ],
+            },
+          ],
         },
         {
           id: "id-card-3",
@@ -151,12 +261,68 @@ export default {
           num: "48 000",
           currency: " ₽ ",
           time: "/ смена",
+          colors: [
+            {
+              id: "id-color-4",
+              value: "yellow",
+              sizes: [
+                {
+                  value: "x",
+                  flag: true,
+                },
+                {
+                  value: "xl",
+                  flag: true,
+                },
+                {
+                  value: "xxl",
+                  flag: false,
+                },
+              ],
+            },
+            {
+              id: "id-color-5",
+              value: "red",
+              sizes: [
+                {
+                  value: "x",
+                  flag: true,
+                },
+                {
+                  value: "xl",
+                  flag: true,
+                },
+                {
+                  value: "xxl",
+                  flag: false,
+                },
+              ],
+            },
+            {
+              id: "id-color-6",
+              value: "orange",
+              sizes: [
+                {
+                  value: "x",
+                  flag: true,
+                },
+                {
+                  value: "xl",
+                  flag: true,
+                },
+                {
+                  value: "xxl",
+                  flag: false,
+                },
+              ],
+            },
+          ],
         },
         {
           id: "id-card-5",
           title: "Техника",
           name: "Экскаватор-разрушитель KOCUREK KURH-45-34",
-          brand: "KOCUREK",
+          brand: "Kocurek",
           num: "138 000",
           currency: " ₽ ",
           time: "/ смена",
@@ -165,7 +331,7 @@ export default {
           id: "id-card-6",
           title: "Техника",
           name: "Экскаватор-разрушитель KOCUREK KURH-45-34-2",
-          brand: "KOCUREK",
+          brand: "Kocurek",
           num: "148 000",
           currency: " ₽ ",
           time: "/ смена",
@@ -174,16 +340,72 @@ export default {
           id: "id-card-7",
           title: "Техника",
           name: "Гусеничный экскаватор HITACHI ZX330LC-5G",
-          brand: "HITACHI",
+          brand: "Hitachi",
           num: "58 000",
           currency: " ₽ ",
           time: "/ смена",
+          colors: [
+            {
+              id: "id-color-7",
+              value: "yellow",
+              sizes: [
+                {
+                  value: "x",
+                  flag: true,
+                },
+                {
+                  value: "xl",
+                  flag: false,
+                },
+                {
+                  value: "xxl",
+                  flag: false,
+                },
+              ],
+            },
+            {
+              id: "id-color-8",
+              value: "red",
+              sizes: [
+                {
+                  value: "x",
+                  flag: true,
+                },
+                {
+                  value: "xl",
+                  flag: true,
+                },
+                {
+                  value: "xxl",
+                  flag: true,
+                },
+              ],
+            },
+            {
+              id: "id-color-9",
+              value: "orange",
+              sizes: [
+                {
+                  value: "x",
+                  flag: true,
+                },
+                {
+                  value: "xl",
+                  flag: true,
+                },
+                {
+                  value: "xxl",
+                  flag: false,
+                },
+              ],
+            },
+          ],
         },
         {
           id: "id-card-8",
           title: "Техника",
           name: "Гусеничный экскаватор HITACHI ZX330LC-5G-2",
-          brand: "HITACHI",
+          brand: "Hitachi",
           num: "68 000",
           currency: " ₽ ",
           time: "/ смена",
@@ -232,9 +454,25 @@ export default {
     VueHeader,
     VueFooter,
   },
+  methods: {},
   mounted() {
     initAccordions();
     initTabs();
+  },
+  computed: {
+    filterData() {
+      let data = [];
+      // если есть выбранные чекбоксы
+      if (this.checkedNames.length) {
+        data = this.cards.filter(
+          (card) => this.checkedNames.indexOf(card.brand.toString()) != -1
+        );
+      } else {
+        // иначе отдаем все данные из массива
+        data = this.cards;
+      }
+      return data;
+    },
   },
 };
 </script>
@@ -338,4 +576,16 @@ export default {
 @import "./sass/blocks/footer";
 
 // ---------------------------------
+.cards-list-enter-active,
+.cards-list-leave-active {
+  transition: all 0.4s ease;
+}
+.cards-list-enter-from,
+.cards-list-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+.cards-list-move {
+  transition: transform 0.4s ease;
+}
 </style>
