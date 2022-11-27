@@ -1,2 +1,0 @@
-"use strict";(self["webpackChunkvue3_catalog"]=self["webpackChunkvue3_catalog"]||[]).push([[443],{2559:function(n,e,t){t.r(e),t.d(e,{default:function(){return d}});var a=t(3396);const u={class:"demolition"},i=(0,a._)("h1",null,"This is an demolition page",-1),c=[i];function o(n,e){return(0,a.wg)(),(0,a.iD)("div",u,c)}var r=t(89);const s={},l=(0,r.Z)(s,[["render",o]]);var d=l}}]);
-//# sourceMappingURL=about.6776da2a.js.map

@@ -318,8 +318,10 @@
 						}
 					}
 					&-colors {
-						padding: 5px 0;
-						min-height: 36px;
+						margin: 5px 0;
+						min-height: 70px;
+						position: relative;
+						width: 100%;
 					}
 					&-list {
 						margin: 0 0 0.5rem;
@@ -329,12 +331,22 @@
 						flex-wrap: wrap;
 						&-item {
 							&:not(:last-of-type) {
-								margin: 0 0.5rem 0 0;
+								margin: 0 0.8rem 0 0;
 							}
+						}
+						&.sizes-list {
+							position: absolute;
+							bottom: 0;
+							left: 0;
+
 						}
 					}
 					.custom-toggle {
 						width: 100%;
+						padding: 0;
+						& label {
+							padding-left: 0;
+						}
 					}
 					.color {
 						width: 1rem;
