@@ -95,10 +95,7 @@
                                     name="color"
                                     :value="color.value"
                                     v-model="card.checkedColor"
-                                  /><span
-                                    class="custom-toggle__icon"
-                                    style="display: none"
-                                  ></span
+                                  /><span class="custom-toggle__icon"></span
                                   ><span
                                     class="custom-toggle__label color"
                                     :class="'color--' + color.value"
@@ -119,7 +116,26 @@
                                       class="catalog__card-list-item sizes-list__item"
                                       v-if="size.flag !== false"
                                     >
-                                      <span class="size">{{ size.value }}</span>
+                                      <!-- <span class="size">{{ size.value }}</span> -->
+                                      <div
+                                        class="custom-toggle custom-toggle--radio"
+                                      >
+                                        <label>
+                                          <input
+                                            type="radio"
+                                            name="size"
+                                            :value="size.value"
+                                            v-model="size.value"
+                                          /><span
+                                            class="custom-toggle__icon"
+                                          ></span
+                                          ><span
+                                            class="custom-toggle__label size"
+                                            :class="'size--' + size.value"
+                                            >{{ size.value }}</span
+                                          >
+                                        </label>
+                                      </div>
                                     </li>
                                   </template>
                                 </ul>

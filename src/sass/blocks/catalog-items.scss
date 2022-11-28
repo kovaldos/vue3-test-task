@@ -333,9 +333,7 @@
 						display: flex;
 						flex-wrap: wrap;
 						&-item {
-							&:not(:last-of-type) {
-								margin: 0 0.5rem 0.5rem 0;
-							}
+							margin: 0 0.5rem 0.5rem 0;
 						}
 						&.sizes-list {
 							position: absolute;
@@ -344,13 +342,35 @@
 							@include vp-374 {
 								top: 25px;
 							}
+							.custom-toggle {
+
+							}
 						}
 					}
 					.custom-toggle {
 						width: 100%;
 						padding: 0;
-						& label {
+						label {
 							padding-left: 0;
+						}
+						&__icon {
+							top: 0;
+							left: 0;
+							width: 100%;
+							height: 100%;
+							border-radius: inherit;
+							border-color: $color-transparent;
+							&::before {
+								display: none;
+							}
+						}
+						input {
+							&:checked + {
+								.custom-toggle__icon {
+									background-color: rgba($color-blue-zodiac, 0.025);
+									border: 1px solid $color-black-russian;
+								}
+							}
 						}
 					}
 					.color {
