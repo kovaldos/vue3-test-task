@@ -322,23 +322,28 @@
 						min-height: 70px;
 						position: relative;
 						width: 100%;
+						@include vp-374 {
+							min-height: 80px;
+						}
 					}
 					&-list {
-						margin: 0 0 0.5rem;
+						margin: 0;
 						padding: 0;
 						list-style: none;
 						display: flex;
 						flex-wrap: wrap;
 						&-item {
 							&:not(:last-of-type) {
-								margin: 0 0.8rem 0 0;
+								margin: 0 0.5rem 0.5rem 0;
 							}
 						}
 						&.sizes-list {
 							position: absolute;
 							bottom: 0;
 							left: 0;
-
+							@include vp-374 {
+								top: 25px;
+							}
 						}
 					}
 					.custom-toggle {

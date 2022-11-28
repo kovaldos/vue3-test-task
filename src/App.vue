@@ -3,6 +3,7 @@
   <div class="wrapper">
     <VueHeader />
     <main>
+      <!-- <VueCatalog :brands-list="brandsList" :cards="filterData"></VueCatalog> -->
       <section class="section catalog catalog--rent">
         <div class="container catalog__container">
           <div class="catalog__heading">
@@ -13,6 +14,7 @@
               <div class="catalog__wrapper-col catalog__wrapper-col--01">
                 <div class="catalog__filter catalog__filter--rent">
                   <div class="catalog__filter">
+                    <!-- <filter-list-check :list="brandsList"></filter-list-check> -->
                     <ul class="catalog__filter-list">
                       <li
                         class="catalog__filter-list-item"
@@ -84,7 +86,7 @@
                             <li
                               class="catalog__card-list-item"
                               v-for="color in card.colors"
-                              :key="color"
+                              :key="color.id"
                             >
                               <div class="custom-toggle custom-toggle--radio">
                                 <label>
@@ -92,7 +94,7 @@
                                     type="radio"
                                     name="color"
                                     :value="color.value"
-                                    v-model="checkedColor"
+                                    v-model="card.checkedColor"
                                   /><span
                                     class="custom-toggle__icon"
                                     style="display: none"
@@ -104,22 +106,24 @@
                                   ></span>
                                 </label>
                               </div>
-                              <ul
-                                class="catalog__card-list sizes-list"
-                                v-if="checkedColor === color.value"
-                              >
-                                <li
-                                  class="catalog__card-list-item sizes-list__item"
-                                  v-for="size in color.sizes"
-                                  :key="size.id"
+                              <transition-group name="size-list">
+                                <ul
+                                  class="catalog__card-list sizes-list"
+                                  v-if="card.checkedColor === color.value"
                                 >
-                                  <span
-                                    class="size"
-                                    v-if="size.flag !== false"
-                                    >{{ size.value }}</span
+                                  <template
+                                    v-for="size in color.sizes"
+                                    :key="size.value"
                                   >
-                                </li>
-                              </ul>
+                                    <li
+                                      class="catalog__card-list-item sizes-list__item"
+                                      v-if="size.flag !== false"
+                                    >
+                                      <span class="size">{{ size.value }}</span>
+                                    </li>
+                                  </template>
+                                </ul>
+                              </transition-group>
                             </li>
                           </ul>
                         </div>
@@ -143,11 +147,12 @@ import VueHeader from "./components/VueHeader.vue";
 import VueFooter from "./components/footer/VueFooter.vue";
 import { initAccordions } from "./js/init-accordion";
 import { initTabs } from "./js/init-tabs";
+// import FilterListCheck from "./components/FilterListCheck.vue";
+// import VueCatalog from "./components/blocks/VueCatalog.vue";
 export default {
   data() {
     return {
       checkedNames: [],
-      checkedColor: null,
       brandsList: [
         {
           id: "id-brand-1",
@@ -192,6 +197,7 @@ export default {
           num: "30 000",
           currency: " ₽ ",
           time: "/ смена",
+          checkedColor: null,
           colors: [
             {
               id: "id-color-1",
@@ -243,7 +249,7 @@ export default {
                 },
                 {
                   value: "xxl",
-                  flag: false,
+                  flag: true,
                 },
               ],
             },
@@ -266,6 +272,7 @@ export default {
           num: "48 000",
           currency: " ₽ ",
           time: "/ смена",
+          checkedColor: null,
           colors: [
             {
               id: "id-color-4",
@@ -295,7 +302,7 @@ export default {
                 },
                 {
                   value: "xl",
-                  flag: true,
+                  flag: false,
                 },
                 {
                   value: "xxl",
@@ -317,7 +324,7 @@ export default {
                 },
                 {
                   value: "xxl",
-                  flag: false,
+                  flag: true,
                 },
               ],
             },
@@ -349,6 +356,7 @@ export default {
           num: "58 000",
           currency: " ₽ ",
           time: "/ смена",
+          checkedColor: null,
           colors: [
             {
               id: "id-color-7",
@@ -458,6 +466,8 @@ export default {
     SVGSprite,
     VueHeader,
     VueFooter,
+    // FilterListCheck,
+    // VueCatalog,
   },
   methods: {},
   mounted() {
@@ -496,7 +506,7 @@ export default {
 // Blocks
 // ---------------------------------
 
-@import "./sass/blocks/modal";
+// @import "./sass/blocks/modal";
 @import "./sass/blocks/btn";
 @import "./sass/blocks/custom-input";
 @import "./sass/blocks/custom-toggle";
@@ -506,9 +516,9 @@ export default {
 @import "./sass/blocks/text";
 @import "./sass/blocks/data-accordion";
 @import "./sass/blocks/btn-to-top";
-@import "./sass/blocks/data-tabs";
-@import "./sass/blocks/tabs";
-@import "./sass/blocks/breadcrumbs";
+// @import "./sass/blocks/data-tabs";
+// @import "./sass/blocks/tabs";
+// @import "./sass/blocks/breadcrumbs";
 @import "./sass/blocks/header";
 @import "./sass/blocks/main-nav";
 @import "./sass/blocks/burger";
@@ -591,6 +601,18 @@ export default {
   transform: translateY(30px);
 }
 .cards-list-move {
+  transition: transform 0.4s ease;
+}
+.size-list-enter-active,
+.size-list-leave-active {
+  transition: all 0.4s ease;
+}
+.size-list-enter-from,
+.size-list-leave-to {
+  opacity: 0;
+  transform: translateX(-2rem);
+}
+.size-list-move {
   transition: transform 0.4s ease;
 }
 </style>
